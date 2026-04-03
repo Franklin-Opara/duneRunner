@@ -1,3 +1,5 @@
+
+
 package com.example.junglerush;
 
 import javafx.animation.AnimationTimer;
@@ -12,8 +14,9 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
+
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -95,7 +98,8 @@ public class MainGame extends Application {
             System.out.println("Could not load audio");
         }
 
-        stage.setTitle("Sandswept");
+        stage.setTitle("Dune Runner");
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.png"))));
         MenuScene menuScene = new MenuScene(stage, this);
         stage.setScene(menuScene.getScene());
         stage.show();
@@ -251,28 +255,40 @@ public class MainGame extends Application {
 
             gc.setFill(Color.rgb(255, 255, 255, overlayOpacity*0.3));
             gc.fillRect(0, 0, 800, 400);
-            gc.setFill(Color.rgb(0, 0, 0, overlayOpacity*0.5));
-            gc.fillRoundRect(200, 50, 400, 300, 20, 20);
+
 
             gc.setFill(Color.rgb(255, 255, 255, Math.min(overlayOpacity, 1)));
-            gc.setFont(Font.font("Arial", FontWeight.BOLD, 25));
 
             if (gameOver) {
-                gc.fillText("GAME OVER", 330, 170);
-                gc.setFont(Font.font("Arial", FontWeight.BOLD, 15));
-                gc.fillText("Score: " + score, 355, 210);
-                gc.fillText("Best: " + nf.format(highScore), 355, 235);
-                gc.fillText("Press R to Restart", 330, 270);
-                gc.fillText("Press M for Menu", 330, 295);
+                gc.setTextAlign(TextAlignment.CENTER);
+                gc.setFill(Color.rgb(0, 0, 0, overlayOpacity*0.7));
+                gc.fillRoundRect(200, 100, 400, 200, 15, 15);
+                gc.setFont(Font.font("Alatsi", 16));
+                gc.setFill(Color.WHITE);
+                gc.fillText("Score: "+ nf.format(score), 400, 158);
+                gc.fillText("High score: " + nf.format(highScore), 400, 188);
+                gc.fillText("Coins collected: " + nf.format(totalCoins), 400, 218);
+                gc.setTextAlign(TextAlignment.LEFT);
+                gc.fillText("R — Restart", 289, 278);
+                gc.fillText("M — Menu", 440, 278);
             }
 
             if (paused) {
-                gc.fillText("PAUSED", 355, 170);
-                gc.setFont(Font.font("Arial", FontWeight.BOLD, 15));
-                gc.fillText("Score: " + score, 355, 210);
-                gc.fillText("Press P to Resume", 330, 230);
-                gc.fillText("Press R to Restart", 330, 250);
-                gc.fillText("Press M for Menu", 330, 275);
+                gc.setFill(Color.rgb(0, 0, 0, overlayOpacity*0.7));
+                gc.fillRect(0, 0, 285, 400);
+                gc.setFill(Color.WHITE);
+                gc.setFont(Font.font("Alatsi", 16));
+                gc.fillText("Score: " + nf.format(score), 31, 58);
+                gc.fillText("High score: " + nf.format(highScore), 31, 88);
+                gc.setFill(Color.rgb(255, 255, 185, Math.min(overlayOpacity, 1)));
+
+                gc.drawImage(coinIcon, 31, 102);
+                gc.fillText(nf.format(totalCoins), 53, 118);
+
+                gc.setFill(Color.rgb(255, 255, 255, Math.min(overlayOpacity, 1)));
+                gc.fillText("M — Menu", 31, 302);
+                gc.fillText("R — Restart", 31, 332);
+                gc.fillText("P — Resume", 31, 362);
 
             }
 
@@ -387,17 +403,12 @@ public class MainGame extends Application {
         gc.setFont(Font.font("Alatsi", 16));
         gc.setFill(Color.rgb(38, 38, 38));
         gc.fillText("Score: " + nf.format(score), 16, 20);
-        gc.fillText("Best: " + nf.format(highScore), 16, 40);
+        gc.fillText("Best: " + nf.format(highScore), 16, 45);
 
         gc.setFill(Color.rgb(255,255,185));
-        String coinText = nf.format(totalCoins);
-        gc.fillText(coinText, 16, 60);
 
-        for (int i = 1; i < 9; i++){
-            if (coinText.length() == i){
-                gc.drawImage(coinIcon, 16 + (i*10 + 4), 45);
-            }
-        }
+        gc.drawImage(coinIcon, 16 , 60);
+        gc.fillText(nf.format(totalCoins), 38, 75);
     }
 
     public void startGame(Stage stage){

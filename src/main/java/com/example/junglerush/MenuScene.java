@@ -65,14 +65,12 @@ public class MenuScene {
 
         gc.setFill(Color.rgb(255,255,185));
         String coinText = nf.format(app.lifetimeCoins);
-        gc.fillText(coinText, 689, 38);
+        gc.drawImage(coinIcon, 689, 23);
+        gc.fillText(coinText, 711, 38);
 
 
-        for (int i = 1; i < 9; i++){
-            if (coinText.length() == i){
-                gc.drawImage(coinIcon, 689 + (i*10 + 4), 23);
-            }
-        }
+
+
 
 
         // controls
