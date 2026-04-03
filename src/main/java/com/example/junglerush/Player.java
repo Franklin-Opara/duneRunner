@@ -3,10 +3,12 @@ package com.example.junglerush;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
+import java.util.Objects;
+
 public class Player {
     double x;
     double y = 240;
-    double velocityY = 0;
+    double velocityY;
     boolean onGround = false;
     Image[] runFrames = new Image[36];
     Image jumpImage;
@@ -21,10 +23,10 @@ public class Player {
         this.velocityY = 0;
         for (int i = 0; i < 36; i++) {
             String filename = i < 10 ? "running/frame_00" + i + ".png" : "running/frame_0" + i + ".png";
-            runFrames[i] = new Image(getClass().getResourceAsStream(filename));
+            runFrames[i] = new Image(Objects.requireNonNull(getClass().getResourceAsStream(filename)));
         }
-        jumpImage = new Image(getClass().getResourceAsStream("jump.png"));
-        deadImage = new Image(getClass().getResourceAsStream("fall.png"));
+        jumpImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("jump.png")));
+        deadImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("fall.png")));
     }
 
     public void update() {

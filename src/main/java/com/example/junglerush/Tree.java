@@ -3,6 +3,8 @@ package com.example.junglerush;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
+import java.util.Objects;
+
 public class Tree {
     double x;
     double y;
@@ -13,7 +15,7 @@ public class Tree {
         this.x = x;
 
         for (int i = 0; i < 9; i++) {
-            treeImages[i] = new Image(getClass().getResourceAsStream("trees/tree_" + (i + 1) + ".png"));
+            treeImages[i] = new Image(Objects.requireNonNull(getClass().getResourceAsStream("trees/tree_" + (i + 1) + ".png")));
         }
 
         int type = (int)(Math.random() * 9);
@@ -22,18 +24,18 @@ public class Tree {
     }
 
     private double getYForTree(int type) {
-        switch (type) {
-            case 0: return 72;
-            case 1: return 211;
-            case 2: return 217;
-            case 3: return 229;
-            case 4: return 101;
-            case 5: return 131;
-            case 6: return 79;
-            case 7: return 132;
-            case 8: return 192;
-            default: return 200;
-        }
+        return switch (type) {
+            case 0 -> 72;
+            case 1 -> 211;
+            case 2 -> 217;
+            case 3 -> 229;
+            case 4 -> 101;
+            case 5 -> 131;
+            case 6 -> 79;
+            case 7 -> 132;
+            case 8 -> 192;
+            default -> 200;
+        };
     }
 
     public void update(double speed) {

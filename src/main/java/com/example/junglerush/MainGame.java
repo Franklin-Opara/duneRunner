@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class MainGame extends Application {
@@ -41,11 +42,12 @@ public class MainGame extends Application {
     double mountain2X = 0;
     double mountain3X = 0;
     double groundX = 0;
-    Image groundImage = new Image(getClass().getResourceAsStream("ground.png"));
-    Image bgSky = new Image(getClass().getResourceAsStream("bgSky.png"));
-    Image bgMountain1 = new Image(getClass().getResourceAsStream("bgMountain1.png"));
-    Image bgMountain2 = new Image(getClass().getResourceAsStream("bgMountain2.png"));
-    Image bgMountain3 = new Image(getClass().getResourceAsStream("bgMountain3.png"));
+    Image groundImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("ground.png")));
+    Image bgSky = new Image(Objects.requireNonNull(getClass().getResourceAsStream("bgSky.png")));
+    Image bgMountain1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("bgMountain1.png")));
+    Image bgMountain2 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("bgMountain2.png")));
+    Image bgMountain3 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("bgMountain3.png")));
+    Image coinIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("staticCoin.png")));
 
     Tree[] trees = new Tree[3];
     MediaPlayer bgMusic;
@@ -81,13 +83,13 @@ public class MainGame extends Application {
 
 
         try {
-            Media bgMedia = new Media(getClass().getResource("audio/backgroundMusic.mp3").toURI().toString());
+            Media bgMedia = new Media(Objects.requireNonNull(getClass().getResource("audio/backgroundMusic.mp3")).toURI().toString());
             bgMusic = new MediaPlayer(bgMedia);
             bgMusic.setVolume(0.5);
             bgMusic.setCycleCount(MediaPlayer.INDEFINITE);
             bgMusic.play();
 
-            Media gameOverMedia = new Media(getClass().getResource("audio/gameOver.mp3").toURI().toString());
+            Media gameOverMedia = new Media(Objects.requireNonNull(getClass().getResource("audio/gameOver.mp3")).toURI().toString());
             gameOverSound = new MediaPlayer(gameOverMedia);
         } catch (Exception e) {
             System.out.println("Could not load audio");
@@ -335,7 +337,8 @@ public class MainGame extends Application {
             tree.draw(gc);
         }
 
-        for (int i = 0; i < coins.size(); i++) {
+        // Iterate backwards to avoid skipping the next item when one is removed
+        for (int i = coins.size() - 1; i >= 0; i--) {
             Coin coin = coins.get(i);
             coin.update(speed);
 
@@ -346,21 +349,23 @@ public class MainGame extends Application {
 
             coin.draw(gc);
 
-            // collect coin
             if (!coin.collected &&
                     player.x + 49 > coin.x + 10 && player.x < coin.x + 30 &&
-                    player.y + 70 > coin.y + 10 && player.y < coin.y + 30) {
+                    player.y + 70 > coin.y + 10 && player.y < coin.y + 30)
+            {
                 coin.collect();
                 totalCoins++;
+
             }
         }
 
 
 
 
+
         player.draw(gc); //SHOWS PLAYER
 
-        for (int i = 0; i < obstacles.size(); i++) {
+        for (int i = obstacles.size() - 1; i >= 0; i--) {
             Rock obstacle = obstacles.get(i);
             obstacle.update(speed);
 
@@ -380,10 +385,19 @@ public class MainGame extends Application {
             }
         }
         gc.setFont(Font.font("Alatsi", 16));
-        gc.setFill(Color.WHITE);
-        gc.fillText("Score: " + nf.format(score), 10, 20);
-        gc.fillText("Best: " + nf.format(highScore), 10, 40);
-        gc.fillText("Coins: " + nf.format(totalCoins), 10, 60);
+        gc.setFill(Color.rgb(38, 38, 38));
+        gc.fillText("Score: " + nf.format(score), 16, 20);
+        gc.fillText("Best: " + nf.format(highScore), 16, 40);
+
+        gc.setFill(Color.rgb(255,255,185));
+        String coinText = nf.format(totalCoins);
+        gc.fillText(coinText, 16, 60);
+
+        for (int i = 1; i < 9; i++){
+            if (coinText.length() == i){
+                gc.drawImage(coinIcon, 16 + (i*10 + 4), 45);
+            }
+        }
     }
 
     public void startGame(Stage stage){

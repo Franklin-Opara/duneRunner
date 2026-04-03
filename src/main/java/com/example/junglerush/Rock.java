@@ -3,6 +3,8 @@ package com.example.junglerush;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
+import java.util.Objects;
+
 public class Rock {
     double x;
     double y;
@@ -16,7 +18,7 @@ public class Rock {
         this.y = 260;
 
         for (int i = 0; i < 4; i++) {
-            rockImages[i] = new Image(getClass().getResourceAsStream("rocks/rock_" + (i + 1) + ".png"));
+            rockImages[i] = new Image(Objects.requireNonNull(getClass().getResourceAsStream("rocks/rock_" + (i + 1) + ".png")));
         }
 
         currentRock = rockImages[(int)(Math.random() * 4)];

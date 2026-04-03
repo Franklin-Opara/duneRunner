@@ -8,21 +8,20 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MenuScene {
-    private Stage stage;
-    private MainGame app;
+    private final Stage stage;
+    private final MainGame app;
     NumberFormat nf = NumberFormat.getInstance(Locale.US);
 
-    Image menuBgSky = new Image(getClass().getResourceAsStream("menuBgSky.png"));
-    Image sitting = new Image(getClass().getResourceAsStream("sitting.png"));
-    Image coinIcon = new Image(getClass().getResourceAsStream("staticCoin.png"));
+    Image menuBgSky = new Image(Objects.requireNonNull(getClass().getResourceAsStream("menuBgSky.png")));
+    Image sitting = new Image(Objects.requireNonNull(getClass().getResourceAsStream("sitting.png")));
+    Image coinIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("staticCoin.png")));
 
     public MenuScene(Stage stage, MainGame app) {
         this.stage = stage;
@@ -67,10 +66,13 @@ public class MenuScene {
         gc.setFill(Color.rgb(255,255,185));
         String coinText = nf.format(app.lifetimeCoins);
         gc.fillText(coinText, 689, 38);
-        gc.drawImage(coinIcon, 689 + coinText.length() * 8.7, 23);
 
 
-
+        for (int i = 1; i < 9; i++){
+            if (coinText.length() == i){
+                gc.drawImage(coinIcon, 689 + (i*10 + 4), 23);
+            }
+        }
 
 
         // controls
