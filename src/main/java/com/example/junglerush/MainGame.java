@@ -1,7 +1,11 @@
+//This is the main game file with most of the game logic
 
-
+//============================PACKAGE NAME============================
 package com.example.junglerush;
 
+//============================NECESSARY IMPORTS FOR THE PROGRAM============================
+
+//=================JAVAFX IMPORTS=====================
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.canvas.Canvas;
@@ -14,11 +18,10 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+//===================JAVA IMPORTS=======================
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -29,22 +32,39 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Scanner;
 
+
+//==========================MAIN CLASS================================
 public class MainGame extends Application {
 
-    Player player = new Player(100);
+    //==============ALL GLOBAL FIELDS IN THE MAIN CLASS ARE DEFINED HERE==================
 
+    //=================OBJECT DECLARATION===============================
+    Player player = new Player(100);
+    Tree[] trees = new Tree[3];
+    ArrayList<Coin> coins = new ArrayList<>();
     ArrayList<Rock> obstacles = new ArrayList<>();
-    int score = 0;
-    int highScore = 0;
-    int lifetimeCoins;
+
+
+    //===============GLOBAL VARIABLES==============
+    boolean paused;
     boolean gameOver = false;
     boolean scoreSaved = false;
+    boolean fadeIn = false;
     double speed = 5;
-
     double mountain1X = 0;
     double mountain2X = 0;
     double mountain3X = 0;
     double groundX = 0;
+    double overlayOpacity = 0;
+    int score = 0;
+    int highScore = 0;
+    int lifetimeCoins;
+    int coinTimer = 0;
+    int totalCoins = 0;
+    AnimationTimer gameTimer;
+    NumberFormat nf = NumberFormat.getInstance(Locale.US);//======FOR THOUSAND SEPARATOR COMMA=========
+
+    //======================IMAGES===============================
     Image groundImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("ground.png")));
     Image bgSky = new Image(Objects.requireNonNull(getClass().getResourceAsStream("bgSky.png")));
     Image bgMountain1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("bgMountain1.png")));
@@ -52,21 +72,15 @@ public class MainGame extends Application {
     Image bgMountain3 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("bgMountain3.png")));
     Image coinIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("staticCoin.png")));
 
-    Tree[] trees = new Tree[3];
+    //=======================SOUNDS=======================
     MediaPlayer bgMusic;
     MediaPlayer gameOverSound;
-    ArrayList<Coin> coins = new ArrayList<>();
-    int coinTimer = 0;
-    int totalCoins = 0;
-    boolean paused;
-    AnimationTimer gameTimer;
-    double overlayOpacity = 0;
-    boolean fadeIn = false;
-    NumberFormat nf = NumberFormat.getInstance(Locale.US);
 
 
     @Override
+    //THINGS THAT HAPPEN AT THE START OF THE GAME
     public void start(Stage stage){
+        //============LOADING HIGH SCORE AND COINS=============
         try{
             loadHighScore();
 
@@ -82,13 +96,14 @@ public class MainGame extends Application {
 
         trees[0] = new Tree(90);
         trees[1] = new Tree(550);
-        trees[2] = new Tree(750);
+        trees[2] = new Tree(750); //INITIAL DEFINITION OF TREE POSITIONS
 
 
+        //=======TRY CATCH BLOCK FOR SOUNDS============
         try {
             Media bgMedia = new Media(Objects.requireNonNull(getClass().getResource("audio/backgroundMusic.mp3")).toURI().toString());
             bgMusic = new MediaPlayer(bgMedia);
-            bgMusic.setVolume(0.5);
+            bgMusic.setVolume(0.4);
             bgMusic.setCycleCount(MediaPlayer.INDEFINITE);
             bgMusic.play();
 
@@ -114,7 +129,7 @@ public class MainGame extends Application {
                 player.jump();
             }
 
-            if (event.getCode() == KeyCode.P && !gameOver) {
+            if (event.getCode() == KeyCode.P && !gameOver && !player.isDead) {
                 paused = !paused;
                 if (paused) {
                     fadeIn = true;

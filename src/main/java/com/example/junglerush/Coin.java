@@ -38,7 +38,7 @@ public class Coin {
 
     public void draw(GraphicsContext gc) {
         if (!collected) {
-            gc.drawImage(coinImage, x, y, 62, 62);
+            gc.drawImage(coinImage, x, y, 55, 55);
         }
     }
 }

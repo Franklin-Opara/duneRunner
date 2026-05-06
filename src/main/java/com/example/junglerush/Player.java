@@ -13,10 +13,12 @@ public class Player {
     Image[] runFrames = new Image[36];
     Image jumpImage;
     Image deadImage;
+    Image sitting;
     int currentFrame = 0;
     int frameTimer = 0;
     boolean isDead = false;
     int deathTimer = 0;
+
 
     public Player(double x) {
         this.x = x;
@@ -27,12 +29,13 @@ public class Player {
         }
         jumpImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("jump.png")));
         deadImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("fall.png")));
+        sitting = new Image(Objects.requireNonNull(getClass().getResourceAsStream("sitting.png")));
     }
 
     public void update() {
         if (isDead) {
             deathTimer++;
-            velocityY += 0.3;
+            velocityY += 0.2;
             y += velocityY;
             if (y > 240) {
                 y = 240;
@@ -44,7 +47,7 @@ public class Player {
             return;
         }
 
-        velocityY += 0.75;
+        velocityY += 0.4;
         y += velocityY;
 
         if (y > 240) {
@@ -65,8 +68,15 @@ public class Player {
 
     public void draw(GraphicsContext gc) {
         if (isDead) {
-            gc.drawImage(deadImage, x, y+9, 80, 80);
-        } else if (!onGround) {
+            if (onGround){
+                gc.drawImage(sitting, 100,248,71, 64);
+            }
+            else{
+                gc.drawImage(deadImage, x, y+9, 80, 80);
+            }
+
+
+        }else if (!onGround) {
             gc.drawImage(jumpImage, x, y, 71, 71);
         } else {
             gc.drawImage(runFrames[currentFrame], x, y, 80, 71);
@@ -75,7 +85,7 @@ public class Player {
 
     public void jump() {
         if (onGround && !isDead) {
-            velocityY = -14.50;
+            velocityY = -9;
         }
     }
 }
